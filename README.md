@@ -3,7 +3,6 @@
 An interactive CLI tool for learning statistics, Markov models, and quantitative finance with AI-powered explanations and live visualizations.
 
 ![Python](https://img.shields.io/badge/python-3.8+-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
 
 ## Features
 
@@ -15,7 +14,7 @@ An interactive CLI tool for learning statistics, Markov models, and quantitative
 ## Installation
 
 ```bash
-git clone https://github.com/yourusername/qfinance-ai.git
+git clone https://github.com/ryomenhaider/qfin_teacher.git
 cd qfinance-ai
 pip install -r requirements.txt
 ```
@@ -60,7 +59,3 @@ Run visualization? (y/n): y
 - requests
 - numpy
 - matplotlib
-
-## License
-
-MIT
