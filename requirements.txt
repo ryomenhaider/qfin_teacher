@@ -2,3 +2,7 @@ rich
 requests
 numpy
 matplotlib
+PyPDF2
+beautifulsoup4
+sentence-transformers
+faiss-cpu

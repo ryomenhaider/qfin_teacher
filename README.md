@@ -1,61 +1,93 @@
-# QFinance Learning CLI
+# QFin RAG Tutor
 
-An interactive CLI tool for learning statistics, Markov models, and quantitative finance with AI-powered explanations and live visualizations.
+An interactive CLI tutor for learning quantitative finance through papers and docs. RAG-powered with AI explanations connected to your trading platform build.
 
-![Python](https://img.shields.io/badge/python-3.8+-blue)
+## Who This Is For
+
+19-year-old self-taught developer building a quantitative market intelligence platform for crypto futures traders.
 
 ## Features
 
-- **AI Tutor** - Explains concepts via OpenRouter's free models
-- **Rich TUI** - Beautiful terminal interface with markdown rendering
-- **Auto-Visualization** - AI generates matplotlib code you can run instantly
-- **Interactive Menu** - Topic browser for structured learning
+- **RAG Pipeline** - Add PDFs, markdown, text files → automatic chunking → FAISS vector store
+- **AI Tutor** - Chat with your knowledge base, connects concepts to your trading system
+- **Progress Tracking** - Tracks cleared topics vs remaining gaps
+- **Market Microstructure Focus** - Built for your specific learning path
 
 ## Installation
 
 ```bash
-git clone https://github.com/ryomenhaider/qfin_teacher.git
-cd qfinance-ai
+git clone <this-repo>
+cd learning_with_ai
 pip install -r requirements.txt
 ```
 
-## Usage
+## First Run
 
 ```bash
-python qfinance_ai.py
+python rag_cli.py
 ```
 
-First run prompts for OpenRouter API key (free). Get one at [openrouter.ai](https://openrouter.ai).
+Prompts for OpenRouter API key (free). Get one at [openrouter.ai](https://openrouter.ai).
 
-### Commands
+## Commands
 
 | Command | Description |
-|---------|------------|
-| `menu` | Show topic browser |
+|---------|-------------|
+| `add <file>` | Add document to knowledge base |
+| `progress` | Show cleared vs remaining topics |
+| `sources` | List loaded documents |
+| `menu` / `help` | Show commands |
 | `clear` | Reset conversation |
-| `quit` | Exit |
+| `exit` | Quit |
 
-### Example Session
+## Your Learning Path
 
+### Cleared (tracked automatically)
+- *All of Statistics* — Wasserman
+- *Forecasting: Principles and Practice* — Hyndman
+- Pinsky & Karlin (Markov chains only)
+
+### Remaining Gaps (priority order)
+1. Stochastic processes — Brownian motion, Poisson, martingales
+2. Hidden Markov Models — Baum-Welch, Viterbi, regime detection
+3. Market microstructure — VPIN, Glosten-Milgrom, Kyle Lambda
+4. Granger causality — lead/lag analysis
+5. Causal inference — Pearl's framework
+6. Prompt engineering — structured outputs
+
+### Study Schedule
+- Phase 1-2: Ingestion + microstructure
+- Phase 3: Regime detection (HMM)
+- Phase 4: Alternative data (sentiment)
+- Phase 5: LLM reasoner
+
+## Adding Documents
+
+Drop papers/docs into the `docs/` folder, then:
+```bash
+python rag_cli.py add docs/paper.pdf
 ```
-You> show me uniform distribution
-AI> [explains concept]
-Run visualization? (y/n): y
-[shows chart]
+
+Or add from anywhere:
+```bash
+python rag_cli.py add /path/to/rabiner_hmm.pdf
 ```
 
-## Topics Covered
+Supported: PDF, MD, TXT, HTML.
 
-- Statistics (distributions, hypothesis testing)
-- Probability theory (Bayes, random variables)
-- Markov Chains
-- Hidden Markov Models
-- Quantitative Finance (options, risk, VaR)
+## How It Works
+
+1. **Ingest** - Reads documents, chunks by sentence (~1000 chars)
+2. **Embed** - Sentence-transformers (all-MiniLM-L6-v2)
+3. **Store** - FAISS vector index
+4. **Retrieve** - Semantic search + context building
+5. **Chat** - LLM answers with your docs as context
+
+The tutor connects concepts to your trading platform, not abstract examples.
 
 ## Requirements
 
 - Python 3.8+
-- rich
-- requests
-- numpy
-- matplotlib
+- rich, requests, numpy, matplotlib
+- PyPDF2, beautifulsoup4
+- sentence-transformers, faiss-cpu

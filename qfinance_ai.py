@@ -31,31 +31,44 @@ console = Console(theme=custom_theme)
 
 API_BASE = "https://openrouter.ai/api/v1"
 
-SYSTEM_PROMPT = """You are an expert tutor helping someone learn:
-1. Statistics and probability theory
-2. Markov chains and hidden Markov models
-3. Quantitative finance (quant trading, risk management, derivatives pricing)
+SYSTEM_PROMPT = """You are tutoring a 19-year-old self-taught developer building a quantitative market intelligence platform for crypto futures traders.
 
-When the user wants to VISUALIZE something, you MUST write runnable Python code in ```python code blocks``` that:
-1. Uses matplotlib/numpy
-2. Shows the concept visually
-3. Is self-contained and runnable
-4. IMPORTANT: Put code on SEPARATE LINES from comments. Example:
+YOUR RULES:
+1. No textbooks unless absolutely necessary. Papers and docs only.
+2. No more than 40 pages per resource. If longer, point to specific sections.
+3. Explain by connecting directly to what they are building — not abstract examples.
+4. When they hit a wall, study exactly what the wall requires. No front-loading theory.
+5. If they ask about a concept, explain it, then show where it appears in their system.
+6. Never tell them to read something already cleared. Track what's been covered.
+7. Challenge understanding by asking them to explain things back.
+8. No motivation speeches. No "great question." Just direct answers.
 
-```python
-import numpy as np
-import matplotlib.pyplot as plt
+CLEARED TOPICS:
+- All of Statistics — Wasserman (probability, statistical inference, convergence, nonparametric, regression)
+- Forecasting: Principles and Practice — Hyndman (time series, ARIMA, ETS, stationarity)
+- Pinsky & Karlin (Markov chain chapters only)
 
-# Parameters
-a, b = 0, 5
-num_points = 500
+REMAINING GAPS (in priority order):
+1. Stochastic processes — Brownian motion, Poisson, martingales
+2. Hidden Markov Models — Baum-Welch, Viterbi, emission distributions, posterior inference
+3. Market microstructure — adverse selection, informed vs uninformed trading, VPIN, Kyle Lambda
+4. Granger causality and lead/lag analysis
+5. Causal inference — Pearl's framework
+6. Prompt engineering for causal extraction
 
-# Code on separate lines
-x_cont = np.linspace(a, b, num_points)
-plt.show()
-```
+CURRENT BUILD PHASES:
+- Phase 1-2: Ingestion + microstructure
+- Phase 3: Regime detection (HMM)
+- Phase 4: Alternative data
+- Phase 5: LLM reasoner
 
-NEVER write: "# comment code here" - ALWAYS use newlines!"""
+KEY ANALOGIES FOR THIS USER:
+- Market regime = hidden state
+- Price behavior = observation sequence
+- Order flow = the data stream
+- Adverse selection = what they're measuring
+
+When they want to VISUALIZE, write runnable Python in ```python blocks``` on separate lines, no emoji bullets."""
 
 def load_config():
     config_dir = Path.home() / ".config" / "qfinance-ai"
@@ -79,27 +92,29 @@ def get_api_key():
 def show_welcome():
     console.clear()
     console.print(Panel(
-        "[bold cyan]📊 QFinance Learning CLI[/bold cyan]\n\n"
-        "[yellow]Learn:[/yellow] Statistics • Markov Chains • Quantitative Finance\n\n"
-        "[dim]Features:[/dim] [info]Auto-visualization[/info] with matplotlib\n\n"
-        "[dim]Commands:[/dim] [info]'menu'[/info] topics  [info]'clear'[/info] reset  [info]'quit'[/info] exit",
+        "[bold cyan]QFin Teacher[/bold cyan] - Crypto futures market intelligence\n\n"
+        "[yellow]Building:[/yellow] Quantitative market intelligence platform\n"
+        "[yellow]Stack:[/yellow] Market microstructure, HMM regime detection, causal reasoning\n\n"
+        "[dim]CLEARED:[/dim] Wasserman stats, Hyndman forecasting, Pinsky Markov chapters\n"
+        "[dim]ACTIVE:[/dim] VPIN/Glosten-Milgrom + HMM (Phase 1-3)\n\n"
+        "[dim]Commands:[/dim] [info]'menu'[/info] topics  [info]'progress'[/info] track  [info]'clear'[/info] reset",
         box=box.DOUBLE,
         border_style="cyan",
-        title="Welcome! 🎓",
+        title="Market Intelligence Tutor",
     ))
 
 def show_menu():
     console.print(Panel(
-        "[bold cyan]📚 Learning Topics[/bold cyan]\n\n"
-        "[1] [yellow]Statistics[/yellow] - Descriptive, distributions, hypothesis\n\n"
-        "[2] [yellow]Probability[/yellow] - Bayes, random variables\n\n"
-        "[3] [yellow]Markov Chains[/yellow] - State transitions\n\n"
-        "[4] [yellow]Hidden Markov Models[/yellow] - Viterbi algorithm\n\n"
-        "[5] [yellow]Quantitative Finance[/yellow] - Options, risk, VaR\n\n"
-        "[6] [yellow]Code Demo[/yellow] - Python visualization examples",
+        "[bold cyan]Learning Topics[/bold cyan]\n\n"
+        "[1] [yellow]Stochastic Processes[/yellow] - Brownian motion, Poisson, martingales\n\n"
+        "[2] [yellow]Hidden Markov Models[/yellow] - Baum-Welch, Viterbi, regime detection\n\n"
+        "[3] [yellow]Market Microstructure[/yellow] - VPIN, Kyle Lambda, adverse selection\n\n"
+        "[4] [yellow]Granger Causality[/yellow] - Lead/lag analysis, alternative data\n\n"
+        "[5] [yellow]Causal Inference[/yellow] - Pearl framework, causal chains\n\n"
+        "[6] [yellow]Prompt Engineering[/yellow] - Structured JSON, hallucination mitigation",
         box=box.ROUNDED,
         border_style="cyan",
-        title="📋 Menu",
+        title="Topics",
     ))
 
 TOPIC_PROMPTS = {
