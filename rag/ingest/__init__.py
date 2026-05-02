@@ -24,11 +24,14 @@ class DocumentIngestor:
     def _ingest_pdf(self, path: Path) -> Optional[Dict]:
         try:
             import PyPDF2
-            with open(path, "rb") as f:
-                reader = PyPDF2.Preader(f)
-                text = ""
-                for page in reader.pages:
-                    text += page.extract_text() or ""
+            try:
+                reader = PyPDF2.PdfReader(path)
+            except AttributeError:
+                reader = PyPDF2.Preader(open(path, "rb"))
+            
+            text = ""
+            for page in reader.pages:
+                text += page.extract_text() or ""
             
             if not text.strip():
                 return None
@@ -120,7 +123,7 @@ class DocumentIngestor:
         return docs
     
     def add_document(self, source: str) -> Dict:
-        path = Path(source)
+        path = Path(source).resolve()
         if not path.exists():
             raise FileNotFoundError(f"File not found: {source}")
         
@@ -131,8 +134,9 @@ class DocumentIngestor:
         if not doc:
             raise ValueError(f"Failed to ingest: {source}")
         
-        dest = self.docs_dir / path.name
-        import shutil
-        shutil.copy(path, dest)
+        if path.parent.resolve() != self.docs_dir.resolve():
+            dest = self.docs_dir / path.name
+            import shutil
+            shutil.copy(path, dest)
         
         return doc

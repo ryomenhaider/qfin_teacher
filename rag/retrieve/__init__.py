@@ -4,7 +4,7 @@ from ..embed import get_embedder
 from ..store import VectorStore
 
 class Retriever:
-    def __init__(self, vector_store: Optional[VectorStore] = None, embedder: Optional = None):
+    def __init__(self, vector_store: Optional[VectorStore] = None, embedder = None):
         self.vector_store = vector_store or VectorStore()
         self.embedder = embedder or get_embedder()
     

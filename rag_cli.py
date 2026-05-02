@@ -223,21 +223,25 @@ def show_sources():
     else:
         console.print("[warning]No vector store found. Add documents first.[/warning]")
 
-def add_document(file_path: str):
+def add_document(file_path: str, show_progress: bool = True):
     try:
         ingestor = DocumentIngestor()
         embedder = get_embedder()
         store = VectorStore(embedder_dim=embedder.embedding_dim)
         
-        console.print(f"[dim]Ingesting {file_path}...[/dim]")
+        if show_progress:
+            console.print(f"[dim]Ingesting {file_path}...[/dim]")
+        
         doc = ingestor.add_document(file_path)
         
         chunks = doc.get("chunks", [])
         if not chunks:
-            console.print("[warning]No chunks extracted.[/warning]")
-            return
+            console.print(f"[warning]No text in {file_path} (scanned PDF?).[/warning]")
+            return False
         
-        console.print(f"[dim]Embedding {len(chunks)} chunks...[/dim]")
+        if show_progress:
+            console.print(f"[dim]Embedding {len(chunks)} chunks...[/dim]")
+        
         embeddings = embedder.encode_chunks(chunks)
         
         if store.load():
@@ -248,10 +252,28 @@ def add_document(file_path: str):
         store.add_chunks(chunks, embeddings)
         store.save()
         
-        console.print(f"[success]Added {len(chunks)} chunks (was {existing}, now {existing + len(chunks)})[/success]")
+        if show_progress:
+            console.print(f"[success]Added {len(chunks)} chunks (was {existing}, now {existing + len(chunks)})[/success]")
+        
+        return True
     
     except Exception as e:
         console.print(f"[danger]Error: {e}[/danger]")
+        return False
+
+def add_all_docs():
+    ingestor = DocumentIngestor()
+    store = None
+    
+    for path in sorted(Path("docs").glob("*")):
+        if path.suffix.lower() in {".pdf", ".md", ".txt", ".html"}:
+            result = add_document(str(path), show_progress=False)
+            if result:
+                console.print(f"[green]✓[/green] {path.name}")
+            else:
+                console.print(f"[dim]—[/dim] {path.name} (no text)")
+    
+    console.print(f"\n[success]Done. Check sources with 'python rag_cli.py sources'[/success]")
 
 def run_chat():
     store = VectorStore()
@@ -318,7 +340,10 @@ def main():
         if len(args) < 2:
             console.print("[warning]Usage: python rag_cli.py add <file>[/warning]")
             return
-        add_document(args[1])
+        if args[1] == "all":
+            add_all_docs()
+        else:
+            add_document(args[1])
     elif args[0] == "progress":
         show_progress_display()
     elif args[0] == "sources":
@@ -326,7 +351,7 @@ def main():
     elif args[0] == "chat":
         run_chat()
     else:
-        console.print("[warning]Commands: add, progress, sources, chat[/warning]")
+        console.print("[warning]Commands: add, add all, progress, sources, chat[/warning]")
 
 if __name__ == "__main__":
     main()
