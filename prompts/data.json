@@ -1,0 +1,91 @@
+{
+  "cleared_topics": {
+    "All of Statistics (Wasserman)": {
+      "cleared": true,
+      "topics": ["probability", "statistical inference", "convergence", "nonparametric methods", "regression fundamentals"],
+      "notes": "Consider fully cleared"
+    },
+    "Forecasting: Principles and Practice (Hyndman)": {
+      "cleared": true,
+      "topics": ["time series decomposition", "ARIMA", "ETS", "forecasting evaluation", "stationarity"],
+      "notes": "Consider fully cleared"
+    },
+    "Pinsky & Karlin (Markov chains only)": {
+      "cleared": true,
+      "topics": ["Markov chains"],
+      "notes": "Chapters on Markov chains only"
+    }
+  },
+  "remaining_gaps": [
+    {
+      "id": 1,
+      "topic": "Stochastic processes",
+      "subtopics": ["Brownian motion", "Poisson processes", "martingales"],
+      "resource": "Pinsky & Karlin",
+      "priority": "high",
+      "phase": "1-2"
+    },
+    {
+      "id": 2,
+      "topic": "Hidden Markov Models",
+      "subtopics": ["Baum-Welch", "Viterbi", "emission distributions", "posterior inference"],
+      "resource": "Rabiner 1989 tutorial",
+      "priority": "high",
+      "phase": "3"
+    },
+    {
+      "id": 3,
+      "topic": "Market microstructure theory",
+      "subtopics": ["adverse selection", "informed vs uninformed trading", "price impact", "VPIN", "Kyle Lambda"],
+      "resource": "Easley 2012 VPIN + Glosten-Milgrom 1985 + Kyle 1985",
+      "priority": "high",
+      "phase": "1-2"
+    },
+    {
+      "id": 4,
+      "topic": "Granger causality and lead/lag analysis",
+      "subtopics": ["causality testing", "lead/lag relationships", "sentiment vs price"],
+      "resource": "Granger 1969 paper",
+      "priority": "medium",
+      "phase": "4"
+    },
+    {
+      "id": 5,
+      "topic": "Causal inference",
+      "subtopics": ["Pearl's framework", "causal chains vs correlation", "do-calculus"],
+      "resource": "The Book of Why + Causal Inference: The Mixtape",
+      "priority": "medium",
+      "phase": "5"
+    },
+    {
+      "id": 6,
+      "topic": "Prompt engineering for causal extraction",
+      "subtopics": ["structured JSON outputs", "hallucination mitigation", "citing source sentences"],
+      "resource": "Anthropic prompt engineering docs",
+      "priority": "medium",
+      "phase": "5"
+    }
+  ],
+  "study_schedule": {
+    "Phase 1-2": {
+      "focus": "Ingestion + microstructure",
+      "resources": ["Easley VPIN", "Glosten-Milgrom", "Kyle 1985"],
+      "status": "active"
+    },
+    "Phase 3": {
+      "focus": "Regime detection (HMM)",
+      "resources": ["Rabiner HMM tutorial"],
+      "status": "pending"
+    },
+    "Phase 4": {
+      "focus": "Alternative data (sentiment)",
+      "resources": ["Granger 1969", "PRAW docs", "FRED API docs"],
+      "status": "pending"
+    },
+    "Phase 5": {
+      "focus": "LLM reasoner",
+      "resources": ["Anthropic prompt engineering", "Pearl causality"],
+      "status": "pending"
+    }
+  }
+}
